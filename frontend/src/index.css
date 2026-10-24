@@ -1,0 +1,76 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { scroll-behavior: smooth; }
+  body {
+    @apply bg-mist font-sans text-soil antialiased;
+  }
+  h1, h2, h3, h4 { @apply font-display tracking-tight; }
+  ::selection { background: #E0A21B; color: #2A1F16; }
+  :focus-visible { outline: 2px solid #E0A21B; outline-offset: 2px; }
+}
+
+@layer components {
+  .btn-primary {
+    @apply active:scale-95 inline-flex items-center justify-center gap-2 rounded-full bg-turmeric px-6 py-3 text-sm font-semibold text-soil transition hover:bg-turmeric-dark hover:text-white;
+  }
+  .btn-dark {
+    @apply active:scale-95 inline-flex items-center justify-center gap-2 rounded-full bg-paddy px-6 py-3 text-sm font-semibold text-white transition hover:bg-paddy-dark;
+  }
+  .btn-ghost {
+    @apply active:scale-95 inline-flex items-center justify-center gap-2 rounded-full border border-white/60 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white hover:text-soil;
+  }
+  .field {
+    @apply w-full rounded-lg border border-soil/20 bg-white px-3 py-2.5 text-sm placeholder:text-soil/40 focus:border-paddy focus:outline-none focus:ring-2 focus:ring-paddy/30;
+  }
+  .skeleton {
+    background: linear-gradient(90deg, #e6e9df 25%, #f1f3ec 50%, #e6e9df 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s linear infinite;
+  }
+}
+
+@keyframes shimmer { to { background-position: -200% 0; } }
+@keyframes board-scroll { to { transform: translateX(-50%); } }
+@keyframes board-scroll-rev { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+@keyframes rise { from { transform: translateY(105%); } to { transform: none; } }
+@keyframes fade-in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes kb { from { transform: scale(-1.14, 1.14); } to { transform: scale(-1, 1); } }
+@keyframes drop-in { from { opacity: 0; transform: translateY(-60px) rotate(calc(var(--rot) - 18deg)) scale(.85); } to { opacity: 1; transform: rotate(var(--rot)); } }
+@keyframes bob { 0%, 100% { transform: translateY(0) rotate(var(--rot)); } 50% { transform: translateY(-14px) rotate(calc(var(--rot) + 3deg)); } }
+@keyframes pop { 0% { transform: scale(.4); } 55% { transform: scale(1.35); } 100% { transform: scale(1); } }
+@keyframes bump { 0% { transform: scale(1); } 40% { transform: scale(1.45); } 100% { transform: scale(1); } }
+@keyframes page-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes float-slow { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+
+.rise { animation: rise .9s cubic-bezier(.2,.8,.2,1) both; }
+.fade-in { animation: fade-in .8s ease-out both; }
+.kenburns { animation: kb 2.8s cubic-bezier(.2,.7,.2,1) both; }
+.drop-in { opacity: 0; animation: drop-in 1s cubic-bezier(.3,1.4,.5,1) forwards, bob var(--bob, 6s) ease-in-out infinite; }
+.pop { animation: pop .45s cubic-bezier(.3,1.5,.5,1); }
+.bump { animation: bump .35s ease-out; }
+.page-enter { animation: page-in .45s ease-out both; }
+.float-slow { animation: float-slow 7s ease-in-out infinite; }
+.board-track-rev { animation: board-scroll-rev 70s linear infinite; }
+
+.reveal { transition: opacity .8s ease, transform .8s cubic-bezier(.2,.8,.2,1), clip-path 1s cubic-bezier(.7,0,.2,1); }
+.reveal-up { opacity: 0; transform: translateY(28px); }
+.reveal-fade { opacity: 0; }
+.reveal-clip { clip-path: inset(0 0 100% 0 round 1.5rem); }
+.reveal-up.in, .reveal-fade.in { opacity: 1; transform: none; }
+.reveal-clip.in { clip-path: inset(0 0 0 0 round 1.5rem); }
+
+.board-track { animation: board-scroll 45s linear infinite; }
+.board:hover .board-track, .board:hover .board-track-rev { animation-play-state: paused; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+  .reveal-up, .reveal-fade { opacity: 1; transform: none; }
+  .reveal-clip { clip-path: none; }
+  .drop-in { opacity: 1; }
+  .board-track, .board-track-rev, .skeleton { animation: none; }
+  .board { overflow-x: auto; }
+}
